@@ -15,8 +15,22 @@ var lavaArray = JSON.stringify([
 ]);
 
 
+
 init();
 animate();
+
+function setUpTween(){
+	origin = { x : 45, y: 4, z: 45 };
+	destination = { x : -45, y: 4, z: -45 };
+
+	var update = function(){
+		scene.children[5].position.x = destination.x;
+		scene.children[5].position.y = destination.y;
+		scene.children[5].position.z = destination.z;
+	}
+
+	var tween = new TWEEN.Tween(origin).to(destination, 2000).easing(TWEEN.Easing.Quadratic.Out).onUpdate(update).start();
+}
 
 
 function init() {
@@ -47,7 +61,7 @@ function init() {
   // OBJECTS
   showBoard();
   showAgent();
-	moveSmooth()
+	setUpTween();
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   window.addEventListener('resize', onWindowResize, false);
@@ -102,16 +116,17 @@ function showAgent() {
   var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({
     color: 'black'
   }));
+	sphere.name = 'agent';
   sphere.add(line);
   scene.add(sphere);
   sphere.position.set(45, 4, 45);
 }
 
 function animate() {
+	render();
+	requestAnimationFrame(animate);
   controls.update();
-  requestAnimationFrame(animate);
-  TWEEN.update();
-  render();
+	TWEEN.update();
 }
 
 function render() {
@@ -127,14 +142,4 @@ function pathCSV() {
     csv_files.push(url.concat((i * 20).toString()).concat('.csv'));
   }
   return csv_files;
-}
-
-function moveSmooth(origin, destination, mesh) {
-  var tween = new TWEEN.Tween(origin)
-	.to(destination, 1000)
-	.easing(TWEEN.Easing.Quadratic.Out)
-	.onUpdate(function() {
-		mesh.position.set(-45, 4, -45)
-	})
-	.start();
 }
