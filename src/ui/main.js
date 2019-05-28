@@ -19,17 +19,37 @@ var lavaArray = JSON.stringify([
 init();
 animate();
 
-function setUpTween(){
-	origin = { x : 45, y: 4, z: 45 };
-	destination = { x : -45, y: 4, z: -45 };
-
-	var update = function(){
-		scene.children[5].position.x = destination.x;
-		scene.children[5].position.y = destination.y;
-		scene.children[5].position.z = destination.z;
+function loadCSV(){
+	url = "/home/juanjo/Documents/demogrid/src/csvdata/dueling-final3/coords_"
+	var csv_files = new Array();
+	var num_files = 200;
+	for (var i = 50; i < num_files; i++) {
+		csv_files.push(url.concat(i.toString()).concat('.csv'));
 	}
+	return csv_files;
+}
 
-	var tween = new TWEEN.Tween(origin).to(destination, 2000).easing(TWEEN.Easing.Quadratic.Out).onUpdate(update).start();
+function getData(csv_file){
+	var url = csv_file;
+	var request = new XMLHttpRequest();
+	request.open("GET", url, false);
+	request.send(null);
+
+	var csvData = new Array();
+	var jsonObject = request.responseText.split(/\r?\n|\r/);
+	for (var t = 0; t < jsonObject.length; t++) {
+		csvData.push(jsonObject[t].split(','));
+	}
+	return csvData;
+}
+
+function moveSmooth(x,y,z, time){
+
+	new TWEEN.Tween(scene.children[5].position)
+	.to(scene.children[5].position.clone().set(x,y,z), time)
+	.easing(TWEEN.Easing.Quadratic.Out)
+	.start();
+
 }
 
 
@@ -61,7 +81,7 @@ function init() {
   // OBJECTS
   showBoard();
   showAgent();
-	setUpTween();
+	moveSmooth();
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   window.addEventListener('resize', onWindowResize, false);
@@ -123,10 +143,10 @@ function showAgent() {
 }
 
 function animate() {
-	render();
 	requestAnimationFrame(animate);
   controls.update();
 	TWEEN.update();
+	render();
 }
 
 function render() {
