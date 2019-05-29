@@ -27,9 +27,9 @@ class Board:
 		self.alpha = 0.1
 		self.alpha_nn = 0.0001
 		self.epsilon = 0.1
-		self.numIterations = 30000
+		self.numIterations = 2000
 		self.changeIteration = 2500
-		self.maxSteps = 50
+		self.maxSteps = 500
 		self.plotStep = 50
 
 		self.actions = [(-1, 0), (1, 0), (0, 1), (0, -1)]
@@ -52,6 +52,13 @@ class Board:
 		# n-step Q-Learning and DQN
 		self.nstep = nstep
 
+		# Paths or printing variables
+		self.version = self.setVersion() + '.' + self.algorithm
+		self.plotBool = plotBool
+		self.surface_path = os.path.join(
+			"/gifs/TimeDifference/", self.algorithm)
+		self.heatmap_path = os.path.join("/gifs/Heatmaps", self.algorithm)
+
 		# Lists or dictionaries
 		self.states = [[i, j] for i in range(self.gridSize) for j in range(self.gridSize)]
 		self.count = defaultdict(int)
@@ -69,6 +76,11 @@ class Board:
 		self.terminalState = getEnv(self.exp, self.gridSize)["terminalState"]
 		self.initState = self.resetInit()
 
+	def setVersion(self):
+		tnum = "TENSORBOARD_NUMBER"
+		assert (
+			tnum in os.environ), "Set environment variable for tensorboard and heatmaps"
+		return os.environ[tnum]
 	def changeExperiment(self, it):
 		if not self.changeExp == None:
 			if it == self.changeIteration:
@@ -149,7 +161,7 @@ class Board:
 		lava = self.getLava()
 		terminalStates = self.getTerminalState()
 
-		return np.stack((agent, terminalStates))
+		return np.stack((agent,lava, terminalStates))
 
 	def printBoard(self, state):
 		board = np.zeros((self.gridSize, self.gridSize))

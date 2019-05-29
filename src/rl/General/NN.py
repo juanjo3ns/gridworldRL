@@ -79,7 +79,7 @@ class DuelingNet(nn.Module):
 	def __init__(self, board):
 		super(DuelingNet, self).__init__()
 		self.feature = nn.Sequential(
-			nn.Linear(2 * board.gridSize * board.gridSize,
+			nn.Linear(3 * board.gridSize * board.gridSize,
 					 5 * board.gridSize * board.gridSize),
 			nn.ReLU()
 		)
