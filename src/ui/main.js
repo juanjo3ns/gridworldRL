@@ -43,10 +43,12 @@ function getData(csv_file){
 	return csvData;
 }
 
-function moveSmooth(x,y,z, time){
-
+function moveSmooth(x,y,z, time, delay){
+	console.log(x,y,z);
+	console.log(scene.children[5].position);
 	new TWEEN.Tween(scene.children[5].position)
 	.to(scene.children[5].position.clone().set(x,y,z), time)
+	.delay(delay)
 	.easing(TWEEN.Easing.Quadratic.Out)
 	.start();
 
@@ -66,7 +68,7 @@ function init() {
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-  camera.position.set(80, 80, 80);
+  camera.position.set(10, 60, 130);
   scene.add(camera)
 
   //LIGHTNING
@@ -98,27 +100,34 @@ function showBoard() {
   cells = new THREE.Object3D();
   for (var i = 0; i < 10; i++) {
     for (var j = 0; j < 10; j++) {
-      var cell = new THREE.BoxGeometry(10, 2, 10);
-      var edges = new THREE.EdgesGeometry(cell);
-      var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({
-        color: 'black'
-      }));
+			var rotate = false, offset = 0;
 
       if (lavaArray.indexOf(JSON.stringify([i, j])) != -1) {
-        var material = new THREE.MeshPhongMaterial({
-          color: 'red',
-          flatShading: THREE.FlatShading
-        });
+				lava = getLava();
+				cell = lava[0];
+				material = lava[1];
+				rotate = true;
+				offset = 5;
       } else {
+				var cell = new THREE.BoxGeometry(10, 2, 10);
         var material = new THREE.MeshPhongMaterial({
           color: 'blue',
           flatShading: THREE.FlatShading
         });
       }
+
+			var edges = new THREE.EdgesGeometry(cell);
+			var line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({
+				color: 'black'
+			}));
+
       var b = new THREE.Mesh(cell, material);
-      b.position.x = -45 + i * 10;
+			if (rotate){
+				b.rotation.x = Math.PI/2;
+			}
+      b.position.x = -45 + i * 10-offset;
       b.position.y = 0;
-      b.position.z = -45 + j * 10;
+      b.position.z = -45 + j * 10-offset;
       b.add(line);
       cells.add(b);
     }
