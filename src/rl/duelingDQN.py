@@ -26,7 +26,7 @@ torch.backends.cudnn.deterministic = True
 
 # epsilon_scheduled = np.linspace(0.3,0.0001,2000)
 import math
-epsilon_scheduled = lambda index: 0.00001 + (0.4 - 0.00001) * math.exp(-1. * index / 2000)
+epsilon_scheduled = lambda index: 0.00001 + (0.5 - 0.00001) * math.exp(-1. * index / 1000)
 
 
 board = Board(epsilon_scheduled=epsilon_scheduled,board_size=10,exp=0,algorithm='dueling-ddqn')

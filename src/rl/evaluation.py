@@ -22,17 +22,18 @@ if len(sys.argv)>2:
 else:
 	iterations = os.listdir(vpath)
 	iterations.sort(key=lambda x: int(x.split('.')[0]))
-print(iterations)
-board = Board()
+# print(iterations)
+board = Board(board_size=10,exp=0,algorithm='dueling-ddqn')
 if 'dueling' in sys.argv[1]:
 	Q = DuelingNet(board)
 else:
 	Q = QNet(board)
 
 def eval_step(q_fn, state):
-	board_state = torch.from_numpy(board.getEnvironment(state).astype(np.float32)).type(dtype)
-	q_values = q_fn.predict(board_state.unsqueeze(0))
-	return board.actions[q_values.max(1)[1][0]]
+	with torch.no_grad():
+		board_state = torch.from_numpy(board.getEnvironment(state).astype(np.float32)).type(dtype)
+		q_values = q_fn.predict(board_state.unsqueeze(0))
+		return board.actions[q_values.max(1)[1][0]]
 
 for i, it in enumerate(iterations):
 	if i%10==0:
@@ -44,7 +45,7 @@ for i, it in enumerate(iterations):
 		dtype = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 		Q = Q.type(dtype)
 
-		num_episodes = 100
+		num_episodes = 50
 		save_episodes = 2
 		lost = 0
 		mvs = []

@@ -27,7 +27,7 @@ class Board:
 		self.alpha = 0.1
 		self.alpha_nn = 0.0001
 		self.epsilon = 0.1
-		self.numIterations = 2000
+		self.numIterations = 1000
 		self.changeIteration = 2500
 		self.maxSteps = 500
 		self.plotStep = 50
@@ -40,7 +40,7 @@ class Board:
 		self.changeExp = changeExp
 
 		# DQN parameters
-		self.start_learning = 50
+		self.start_learning = 0
 		self.target_update_freq = 1
 		self.learning_freq = 1
 		self.batch_size = 1
@@ -96,7 +96,7 @@ class Board:
 		self.movements = 0
 		# Initialize initState to terminal state to make sure we enter the while
 		initState = self.terminalState
-		while initState == self.terminalState:
+		while initState == self.terminalState or initState in self.lava:
 			initState = (random.randint(0, self.gridSize-1),random.randint(0, self.gridSize-1))
 		return tuple(initState)
 
