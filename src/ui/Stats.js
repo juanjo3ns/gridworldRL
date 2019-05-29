@@ -16,7 +16,7 @@ function addStats(csvData) {
 			height: 1,
 			curveSegments: 2
 		});
-		var t3 = new THREE.TextGeometry('Accuracy-->'.concat(csvData[0][1]).concat('%'), {
+		var t3 = new THREE.TextGeometry('Accuracy-->'.concat(parseFloat(csvData[0][1]).toFixed(2).toString()).concat('%'), {
 			font: font,
 			size: 3,
 			height: 1,

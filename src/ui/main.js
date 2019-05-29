@@ -13,6 +13,7 @@ var lavaArray = JSON.stringify([
   [5, 2],
   [4, 2]
 ]);
+var terminalState = JSON.stringify([[9,0]]);
 
 
 
@@ -20,11 +21,11 @@ init();
 animate();
 
 function loadCSV(){
-	url = "/home/juanjo/Documents/demogrid/src/csvdata/dueling-final3/coords_"
+	url = "src/csvdata/1.0.1.dueling-ddqn/coords_"
 	var csv_files = new Array();
-	var num_files = 200;
-	for (var i = 50; i < num_files; i++) {
-		csv_files.push(url.concat(i.toString()).concat('.csv'));
+	var num_files = 80;
+	for (var i = 0; i < num_files; i++) {
+		csv_files.push(url.concat((i*10).toString()).concat('.csv'));
 	}
 	return csv_files;
 }
@@ -44,8 +45,6 @@ function getData(csv_file){
 }
 
 function moveSmooth(x,y,z, time, delay){
-	console.log(x,y,z);
-	console.log(scene.children[5].position);
 	new TWEEN.Tween(scene.children[5].position)
 	.to(scene.children[5].position.clone().set(x,y,z), time)
 	.delay(delay)
@@ -108,6 +107,12 @@ function showBoard() {
 				material = lava[1];
 				rotate = true;
 				offset = 5;
+			} else if (terminalState.indexOf(JSON.stringify([i,j])) != -1){
+				var cell = new THREE.BoxGeometry(10, 2, 10);
+				var material = new THREE.MeshPhongMaterial({
+					color: 'black',
+					flatShading: THREE.FlatShading
+				});
       } else {
 				var cell = new THREE.BoxGeometry(10, 2, 10);
         var material = new THREE.MeshPhongMaterial({
@@ -161,14 +166,4 @@ function animate() {
 function render() {
   renderer.render(scene, camera);
 
-}
-
-function pathCSV() {
-  url = "/home/juanjo/Documents/demogrid/src/csvdata/dueling-final2/coords_"
-  var csv_files = new Array();
-  var num_files = 15;
-  for (var i = 0; i < num_files; i++) {
-    csv_files.push(url.concat((i * 20).toString()).concat('.csv'));
-  }
-  return csv_files;
 }
