@@ -1,4 +1,7 @@
 var renderer, scene, camera;
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
 var lavaArray = JSON.stringify([
   [0, 6],
   [1, 6],
@@ -15,10 +18,10 @@ var lavaArray = JSON.stringify([
 ]);
 var terminalState = JSON.stringify([[9,0]]);
 
-
-
 init();
 animate();
+
+
 
 function loadCSV(){
 	url = "src/csvdata/1.0.1.dueling-ddqn/coords_"
@@ -83,7 +86,11 @@ function init() {
   showBoard();
   showAgent();
 	moveSmooth();
+	addButtons();
+	addEpochs();
 
+
+	document.addEventListener( 'click', onDocumentMouseDown , false );
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   window.addEventListener('resize', onWindowResize, false);
 }
@@ -154,6 +161,18 @@ function showAgent() {
   sphere.add(line);
   scene.add(sphere);
   sphere.position.set(45, 4, 45);
+}
+function onDocumentMouseDown( event ) {
+		console.log("onDocumentMouseDown");
+    event.preventDefault();
+    mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
+
+    raycaster.setFromCamera( mouse, camera );
+    var intersects = raycaster.intersectObjects( scene.children );
+    if ( intersects.length > 0 ) {
+        intersects[0].object.callback();
+    }
 }
 
 function animate() {
