@@ -1,6 +1,9 @@
 var renderer, scene, camera;
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
+var gparent = new THREE.Object3D();
+var intervalID;
+gparent.name = "text_parent";
 
 var lavaArray = JSON.stringify([
   [0, 6],
@@ -21,6 +24,12 @@ var terminalState = JSON.stringify([[9,0]]);
 init();
 animate();
 
+function runDefaultEpisode(){
+	var csvfile = getURL(710);
+	csvData = getData(csvfile);
+	addStats(csvData);
+	intervalID = setInterval(runEvaluations, 200, csvData);
+}
 
 
 function loadCSV(){
@@ -31,6 +40,22 @@ function loadCSV(){
 		csv_files.push(url.concat((i*10).toString()).concat('.csv'));
 	}
 	return csv_files;
+}
+
+function changeCSV(epoch){
+	epoch = (parseInt(epoch)*10).toString();
+	clearInterval(intervalID);
+	csvfile = getURL(epoch);
+	csvData = getData(csvfile);
+	updateStats(csvData);
+	var counter = 1;
+	intervalID = setInterval(runEvaluations, 200, csvData);
+
+}
+
+function getURL(epoch){
+	url = "src/csvdata/1.0.1.dueling-ddqn/coords_"
+	return url.concat(epoch).concat('.csv');
 }
 
 function getData(csv_file){
@@ -69,8 +94,8 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-  camera.position.set(10, 60, 130);
+  camera = new THREE.PerspectiveCamera(55, width / height, 1, 10000);
+  camera.position.set(10, 95, 140);
   scene.add(camera)
 
   //LIGHTNING
@@ -83,12 +108,15 @@ function init() {
 
 
   // OBJECTS
+	showStats();
   showBoard();
   showAgent();
 	moveSmooth();
 	addButtons();
 	addEpochs();
-
+	scene.add(gparent);
+	counter = 1;
+	runDefaultEpisode();
 
 	document.addEventListener( 'click', onDocumentMouseDown , false );
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -163,16 +191,24 @@ function showAgent() {
   sphere.position.set(45, 4, 45);
 }
 function onDocumentMouseDown( event ) {
-		console.log("onDocumentMouseDown");
     event.preventDefault();
     mouse.x = ( event.clientX / renderer.domElement.clientWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / renderer.domElement.clientHeight ) * 2 + 1;
 
     raycaster.setFromCamera( mouse, camera );
-    var intersects = raycaster.intersectObjects( scene.children );
-    if ( intersects.length > 0 ) {
-        intersects[0].object.callback();
-    }
+    var intersects1 = raycaster.intersectObjects( scene.children );
+		var intersects2 = raycaster.intersectObjects( scene.getObjectByName('text_parent').children );
+    if ( intersects2.length > 0 ) {
+			intersects = raycaster.intersectObjects( scene.getObjectByName('text_parent').children );
+			if (buttons.indexOf(intersects[0].object.name) != -1){
+				backtoGreen();
+				intersects[0].object.material.color.set("red");
+				changeCSV(intersects[0].object.name);
+			}
+		}else if(intersects1.length > 0){
+				var current = scene.getObjectByName("text_parent").visible;
+				scene.getObjectByName("text_parent").visible = !current;
+		}
 }
 
 function animate() {
