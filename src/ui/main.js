@@ -36,6 +36,22 @@ function runDefaultEpisode(init=false){
 	intervalID = setInterval(runEvaluations, 200, csvData);
 }
 
+//Set blue color for all the normal cells
+function paintBoard(state){
+	for (var i = 0; i < 10; i++) {
+		for (var j = 0; j < 10; j++) {
+			if (lavaArray.indexOf(JSON.stringify([i, j])) != -1){
+				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.color = new THREE.Color(0xff0000);
+			}else if (terminalState.indexOf(JSON.stringify([i,j])) != -1){
+				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.color = new THREE.Color(0x000000);
+			}else{
+				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.color = new THREE.Color(0x0000ff);
+			}
+		}
+	}
+	scene.getObjectByName("cells").getObjectByName(state[0].toString()+state[1].toString()).material.color = new THREE.Color(0xffffff);;
+}
+
 
 function loadCSV(){
 	url = "src/csvdata/1.0.1.dueling-ddqn/coords_"
@@ -137,6 +153,7 @@ function onWindowResize() {
 
 function showBoard() {
   cells = new THREE.Object3D();
+	cells.name = 'cells';
   for (var i = 0; i < 10; i++) {
     for (var j = 0; j < 10; j++) {
 			var rotate = false, offset = 0;
@@ -167,6 +184,7 @@ function showBoard() {
 			}));
 
       var b = new THREE.Mesh(cell, material);
+			b.name = i.toString()+j.toString();
 			if (rotate){
 				b.rotation.x = Math.PI/2;
 			}

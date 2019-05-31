@@ -5,12 +5,22 @@ function trC(coord){
 	return -45 + coord*10;
 }
 
+//Check if it's the beginning of an episode
+function isInit(laststep,state){
+	// console.log(Math.abs(laststep[0]-state[0]),Math.abs(laststep[1]-state[1]));
+	return (Math.abs(laststep[0]-state[0])>1 || Math.abs(laststep[1]-state[1])>1)
+}
+
+
 function runEvaluations(csvData){
 
-	if (counter >= csvData.length || counter >= 45){
+	if (counter >= (csvData.length-1) || counter >= 45){
 		counter = 1;
 	}
 	state = [parseInt(csvData[counter][0]),parseInt(csvData[counter][1])];
+	if (isInit(laststep, state)){
+		paintBoard(state);
+	}
  	if(laststep[0]==state[0] && laststep[1]==state[1]){
 		if (state[0]==9){
 			moveSmooth(trC(state[0]+1), 4,trC(state[1]), 100,0);
