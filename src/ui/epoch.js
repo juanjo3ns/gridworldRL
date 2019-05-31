@@ -7,7 +7,7 @@ function addButtons(){
 	var cube = new THREE.BoxGeometry( 3, 3, 3 );
 	for(var j=0; j< 2; j++) {
 		for(var i=0; i< num_files/2; i++) {
-			var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+			var material = new THREE.MeshBasicMaterial({color: 'green'});
 			var mesh = new THREE.Mesh( cube, material);
 			gparent.add(mesh);
 			mesh.position.x = 15 + j*30;

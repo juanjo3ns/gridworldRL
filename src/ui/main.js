@@ -24,10 +24,15 @@ var terminalState = JSON.stringify([[9,0]]);
 init();
 animate();
 
-function runDefaultEpisode(){
+function runDefaultEpisode(init=false){
 	var csvfile = getURL(710);
 	csvData = getData(csvfile);
-	addStats(csvData);
+	if (!init){
+		addStats(csvData);
+	}else{
+		updateStats(csvData);
+	}
+	scene.getObjectByName("text_parent").visible = false;
 	intervalID = setInterval(runEvaluations, 200, csvData);
 }
 
@@ -73,8 +78,8 @@ function getData(csv_file){
 }
 
 function moveSmooth(x,y,z, time, delay){
-	new TWEEN.Tween(scene.children[5].position)
-	.to(scene.children[5].position.clone().set(x,y,z), time)
+	new TWEEN.Tween(scene.getObjectByName("agent").position)
+	.to(scene.getObjectByName("agent").position.clone().set(x,y,z), time)
 	.delay(delay)
 	.easing(TWEEN.Easing.Quadratic.Out)
 	.start();
@@ -206,8 +211,18 @@ function onDocumentMouseDown( event ) {
 				changeCSV(intersects[0].object.name);
 			}
 		}else if(intersects1.length > 0){
+			if (intersects1[0].object.name == 'switch'){
 				var current = scene.getObjectByName("text_parent").visible;
 				scene.getObjectByName("text_parent").visible = !current;
+				if (current){
+					intersects1[0].object.material.color.set('grey');
+					clearInterval(intervalID);
+					runDefaultEpisode(true);
+					backtoGreen();
+				}else{
+					intersects1[0].object.material.color.set('white');
+				}
+			}
 		}
 }
 
