@@ -25,7 +25,7 @@ init();
 animate();
 
 function runDefaultEpisode(init=false){
-	var csvfile = getURL(710);
+	var csvfile = getURL("coords", 710);
 	csvData = getData(csvfile);
 	if (!init){
 		addStats(csvData);
@@ -34,6 +34,24 @@ function runDefaultEpisode(init=false){
 	}
 	scene.getObjectByName("text_parent").visible = false;
 	intervalID = setInterval(runEvaluations, 200, csvData);
+}
+
+function switchOpacity(){
+	if (scene.getObjectByName("cells").getObjectByName("00").material.transparent){
+		for (var i = 0; i < 10; i++) {
+			for (var j = 0; j < 10; j++) {
+				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.transparent = false;
+				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.opacity = 1;
+			}
+		}
+	}else{
+		for (var i = 0; i < 10; i++) {
+			for (var j = 0; j < 10; j++) {
+				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.transparent = true;
+				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.opacity = 0.3;
+			}
+		}
+	}
 }
 
 //Set blue color for all the normal cells
@@ -66,16 +84,18 @@ function loadCSV(){
 function changeCSV(epoch){
 	epoch = (parseInt(epoch)*10).toString();
 	clearInterval(intervalID);
-	csvfile = getURL(epoch);
+	csvfile = getURL("coords", epoch);
 	csvData = getData(csvfile);
 	updateStats(csvData);
+	changeValues(epoch);
+	setSteps(epoch);
 	var counter = 1;
 	intervalID = setInterval(runEvaluations, 200, csvData);
 
 }
 
-function getURL(epoch){
-	url = "src/csvdata/1.0.1.dueling-ddqn/coords_"
+function getURL(data,epoch){
+	url = "src/csvdata/" + data +"/1.0.1.dueling-ddqn/"+ data + "_"
 	return url.concat(epoch).concat('.csv');
 }
 
@@ -93,15 +113,6 @@ function getData(csv_file){
 	return csvData;
 }
 
-function moveSmooth(x,y,z, time, delay){
-	new TWEEN.Tween(scene.getObjectByName("agent").position)
-	.to(scene.getObjectByName("agent").position.clone().set(x,y,z), time)
-	.delay(delay)
-	.easing(TWEEN.Easing.Quadratic.Out)
-	.start();
-
-}
-
 
 function init() {
   renderer = new THREE.WebGLRenderer({
@@ -117,6 +128,7 @@ function init() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(55, width / height, 1, 10000);
   camera.position.set(10, 95, 140);
+	camera.name = "camera";
   scene.add(camera)
 
   //LIGHTNING
@@ -132,12 +144,14 @@ function init() {
 	showStats();
   showBoard();
   showAgent();
-	moveSmooth();
+	moveAgent();
 	addButtons();
 	addEpochs();
 	scene.add(gparent);
 	counter = 1;
 	runDefaultEpisode();
+	addStateValues();
+	addStepsBoard();
 
 	document.addEventListener( 'click', onDocumentMouseDown , false );
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -231,14 +245,19 @@ function onDocumentMouseDown( event ) {
 		}else if(intersects1.length > 0){
 			if (intersects1[0].object.name == 'switch'){
 				var current = scene.getObjectByName("text_parent").visible;
+				switchOpacity();
 				scene.getObjectByName("text_parent").visible = !current;
 				if (current){
 					intersects1[0].object.material.color.set('grey');
 					clearInterval(intervalID);
 					runDefaultEpisode(true);
 					backtoGreen();
+					scene.getObjectByName("steps").visible = false;
 				}else{
 					intersects1[0].object.material.color.set('white');
+					moveCamera(-1.48,  30.19, 166.77, 1000);
+					scene.getObjectByName("steps").visible = true;
+					rotateSteps(1000);
 				}
 			}
 		}

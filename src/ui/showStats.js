@@ -18,7 +18,7 @@ function showStats() {
 		var fontMaterial = new THREE.MeshPhongMaterial({
 			color: 'white'
 		});
-		var textt = new THREE.TextGeometry("SHOW STATS", {
+		var textt = new THREE.TextGeometry("DEVELOPER_MODE", {
 			font: font,
 			size: 5,
 			height: 1,
