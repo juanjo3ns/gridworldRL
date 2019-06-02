@@ -1,8 +1,8 @@
 function addStepsBoard() {
   steps = new THREE.Object3D();
 	steps.name = 'steps';
-  for (var i = 0; i < 10; i++) {
-    for (var j = 0; j < 10; j++) {
+  for (var i = 0; i < gridSize; i++) {
+    for (var j = 0; j < gridSize; j++) {
 			var cell = new THREE.BoxGeometry(10, 2, 10);
       var material = new THREE.MeshPhongMaterial({
 				transparent: true,
@@ -13,10 +13,10 @@ function addStepsBoard() {
 
 
       var b = new THREE.Mesh(cell, material);
-			b.name = i.toString()+j.toString();
-      b.position.x = -45 + i * 10;
+			b.name = (j+i*19).toString();
+      b.position.x = -95 + i * 10;
       b.position.y = 0;
-      b.position.z = -45 + j * 10;
+      b.position.z = -95 + j * 10;
       steps.add(b);
     }
   }
@@ -27,11 +27,10 @@ function addStepsBoard() {
 function setSteps(epoch){
 	file = getURL("steps", epoch);
 	data = getData(file);
-	for (var i = 0; i < 10; i++) {
-    for (var j = 0; j < 10; j++) {
+	for (var i = 0; i < gridSize; i++) {
+    for (var j = 0; j < gridSize; j++) {
 			color = parseFloat(data[i][j]);
-			console.log(color);
-			scene.getObjectByName("steps").getObjectByName(i.toString()+j.toString()).material.color.setRGB(1,color,0);
+			scene.getObjectByName("steps").getObjectByName((j+i*19).toString()).material.color.setRGB(1,color,0);
 		}
 	}
 }

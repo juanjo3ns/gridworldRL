@@ -7,9 +7,9 @@ function showStats() {
 	var swch = new THREE.Mesh(sw_b, material_b);
 	swch.name = 'switch';
 
-	swch.position.x = -40;
-	swch.position.y = 43;
-	swch.position.z = -55;
+	swch.position.x = -80;
+	swch.position.y = 63;
+	swch.position.z = -105;
 	swch.rotation.x = Math.PI/2;
 
 	scene.add(swch);
@@ -20,15 +20,15 @@ function showStats() {
 		});
 		var textt = new THREE.TextGeometry("DEVELOPER_MODE", {
 			font: font,
-			size: 5,
+			size: 7,
 			height: 1,
 			curveSegments: 2
 		});
 		var sw = new THREE.Mesh(textt, fontMaterial);
 
-		sw.position.x = -30;
-		sw.position.y = 40;
-		sw.position.z = -55;
+		sw.position.x = -70;
+		sw.position.y = 60;
+		sw.position.z = -105;
 
 		scene.add(sw);
 

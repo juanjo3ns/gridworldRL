@@ -2,30 +2,25 @@ var renderer, scene, camera;
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 var gparent = new THREE.Object3D();
+var gridSize = 19;
 var intervalID;
 gparent.name = "text_parent";
 
 var lavaArray = JSON.stringify([
-  [0, 6],
-  [1, 6],
-  [2, 6],
-  [3, 6],
-  [4, 6],
-  [5, 6],
-  [9, 2],
-  [8, 2],
-  [7, 2],
-  [6, 2],
-  [5, 2],
-  [4, 2]
-]);
-var terminalState = JSON.stringify([[9,0]]);
+  [1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[1,8],[1,9],[1,10],[1,11],
+  [1,12],[1,13],[1,14],[1,15],[1,16],[1,17],[2,1],[3,1],[4,1],[5,1],[6,1],
+  [7,1],[8,1],[9,1],[10,1],[11,1],[12,1],[13,1],[14,1],[2,17],[3,17],[4,17],
+  [5,17],[6,17],[7,17],[8,17],[9,17],[10,17],[11,17],[12,17],[13,17],[14,17],
+	[13,6],[13,7],[13,8],[13,9],[13,10],[13,11],[13,12],[4,6],[5,6],[6,6],[7,6],
+	[8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[4,12],[5,12],[6,12],[7,12],[8,12],
+	[9,12],[10,12],[11,12],[12,12],[13,12]]);
+var terminalState = JSON.stringify([[0,9]]);
 
 init();
 animate();
 
 function runDefaultEpisode(init=false){
-	var csvfile = getURL("coords", 710);
+	var csvfile = getURL("coords", 7400);
 	csvData = getData(csvfile);
 	if (!init){
 		addStats(csvData);
@@ -37,18 +32,18 @@ function runDefaultEpisode(init=false){
 }
 
 function switchOpacity(){
-	if (scene.getObjectByName("cells").getObjectByName("00").material.transparent){
-		for (var i = 0; i < 10; i++) {
-			for (var j = 0; j < 10; j++) {
-				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.transparent = false;
-				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.opacity = 1;
+	if (scene.getObjectByName("cells").getObjectByName("0").material.transparent){
+		for (var i = 0; i < gridSize; i++) {
+			for (var j = 0; j < gridSize; j++) {
+				scene.getObjectByName("cells").getObjectByName((j+i*19).toString()).material.transparent = false;
+				scene.getObjectByName("cells").getObjectByName((j+i*19).toString()).material.opacity = 1;
 			}
 		}
 	}else{
-		for (var i = 0; i < 10; i++) {
-			for (var j = 0; j < 10; j++) {
-				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.transparent = true;
-				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.opacity = 0.3;
+		for (var i = 0; i < gridSize; i++) {
+			for (var j = 0; j < gridSize; j++) {
+				scene.getObjectByName("cells").getObjectByName((j+i*19).toString()).material.transparent = true;
+				scene.getObjectByName("cells").getObjectByName((j+i*19).toString()).material.opacity = 0.3;
 			}
 		}
 	}
@@ -56,33 +51,22 @@ function switchOpacity(){
 
 //Set blue color for all the normal cells
 function paintBoard(state){
-	for (var i = 0; i < 10; i++) {
-		for (var j = 0; j < 10; j++) {
+	for (var i = 0; i < gridSize; i++) {
+		for (var j = 0; j < gridSize; j++) {
 			if (lavaArray.indexOf(JSON.stringify([i, j])) != -1){
-				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.color = new THREE.Color(0xff0000);
+				scene.getObjectByName("cells").getObjectByName((j+i*19).toString()).material.color = new THREE.Color(0xff0000);
 			}else if (terminalState.indexOf(JSON.stringify([i,j])) != -1){
-				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.color = new THREE.Color(0x000000);
+				scene.getObjectByName("cells").getObjectByName((j+i*19).toString()).material.color = new THREE.Color(0x000000);
 			}else{
-				scene.getObjectByName("cells").getObjectByName(i.toString()+j.toString()).material.color = new THREE.Color(0x0000ff);
+				scene.getObjectByName("cells").getObjectByName((j+i*19).toString()).material.color = new THREE.Color(0x0000ff);
 			}
 		}
 	}
-	scene.getObjectByName("cells").getObjectByName(state[0].toString()+state[1].toString()).material.color = new THREE.Color(0xffffff);;
-}
-
-
-function loadCSV(){
-	url = "src/csvdata/1.0.1.dueling-ddqn/coords_"
-	var csv_files = new Array();
-	var num_files = 80;
-	for (var i = 0; i < num_files; i++) {
-		csv_files.push(url.concat((i*10).toString()).concat('.csv'));
-	}
-	return csv_files;
+	scene.getObjectByName("cells").getObjectByName((state[0]*19+state[1]).toString()).material.color = new THREE.Color(0xffffff);;
 }
 
 function changeCSV(epoch){
-	epoch = (parseInt(epoch)*10).toString();
+	epoch = (parseInt(epoch)*200+1200).toString();
 	clearInterval(intervalID);
 	csvfile = getURL("coords", epoch);
 	csvData = getData(csvfile);
@@ -95,7 +79,7 @@ function changeCSV(epoch){
 }
 
 function getURL(data,epoch){
-	url = "src/csvdata/" + data +"/1.0.1.dueling-ddqn/"+ data + "_"
+	url = "src/csvdata/" + data +"/2.2.1/"
 	return url.concat(epoch).concat('.csv');
 }
 
@@ -127,7 +111,7 @@ function init() {
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(55, width / height, 1, 10000);
-  camera.position.set(10, 95, 140);
+  camera.position.set(0, 100, 200);
 	camera.name = "camera";
   scene.add(camera)
 
@@ -168,8 +152,8 @@ function onWindowResize() {
 function showBoard() {
   cells = new THREE.Object3D();
 	cells.name = 'cells';
-  for (var i = 0; i < 10; i++) {
-    for (var j = 0; j < 10; j++) {
+  for (var i = 0; i < gridSize; i++) {
+    for (var j = 0; j < gridSize; j++) {
 			var rotate = false, offset = 0;
 
       if (lavaArray.indexOf(JSON.stringify([i, j])) != -1) {
@@ -198,13 +182,14 @@ function showBoard() {
 			}));
 
       var b = new THREE.Mesh(cell, material);
-			b.name = i.toString()+j.toString();
+
+			b.name = (j+i*19).toString();
 			if (rotate){
 				b.rotation.x = Math.PI/2;
 			}
-      b.position.x = -45 + i * 10-offset;
+      b.position.x = -95 + i * 10-offset;
       b.position.y = 0;
-      b.position.z = -45 + j * 10-offset;
+      b.position.z = -95 + j * 10-offset;
       b.add(line);
       cells.add(b);
     }
@@ -255,7 +240,7 @@ function onDocumentMouseDown( event ) {
 					scene.getObjectByName("steps").visible = false;
 				}else{
 					intersects1[0].object.material.color.set('white');
-					moveCamera(-1.48,  30.19, 166.77, 1000);
+					moveCamera(0,  36, 280, 1000);
 					scene.getObjectByName("steps").visible = true;
 					rotateSteps(1000);
 				}

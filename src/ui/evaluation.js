@@ -2,7 +2,7 @@ var laststep = [0,0];
 
 // Transform coordinates from 0->9 to -45->45
 function trC(coord){
-	return -45 + coord*10;
+	return -95 + coord*10;
 }
 
 //Check if it's the beginning of an episode
@@ -14,7 +14,7 @@ function isInit(laststep,state){
 
 function runEvaluations(csvData){
 
-	if (counter >= (csvData.length-1) || counter >= 45){
+	if (counter >= (csvData.length-1)){
 		counter = 1;
 	}
 	state = [parseInt(csvData[counter][0]),parseInt(csvData[counter][1])];

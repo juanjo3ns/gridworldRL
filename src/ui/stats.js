@@ -13,16 +13,16 @@ function addStats(csvData) {
 			}
 			var t = new THREE.TextGeometry(text, {
 				font: font,
-				size: 3,
+				size: 5,
 				height: 1,
 				curveSegments: 2
 			});
 			var tm = new THREE.Mesh(t, fontMaterial);
 			tm.name = 'tm'.concat(i);
 
-			tm.position.x = -50;
-			tm.position.y = 25 -i*5;
-			tm.position.z = -55;
+			tm.position.x = -75;
+			tm.position.y = 45 -i*8;
+			tm.position.z = -105;
 			gparent.add(tm);
 		}
 	});
