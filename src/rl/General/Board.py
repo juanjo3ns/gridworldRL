@@ -6,6 +6,8 @@ from IPython import embed
 from collections import defaultdict
 from random import choice
 from tensorboard_logger import configure, log_value, log_histogram
+# from src.utils.plot import *
+# from src.utils.generateGIF import genGIF
 from src.rl.General.lava import *
 
 
@@ -15,25 +17,27 @@ class Board:
 				 board_size=10,
 				 algorithm='sarsa',
 				 plotBool=[False, False],
-				 exp=4,
+				 exp=1,
 				 changeExp=None,
-				 nstep=1):
+				 nstep=1,
+				 batch_size=1,
+				 update_freq=1):
 
-		self.rewardSize = -0.04
+		self.rewardSize = -0.02
 		self.reward_lava = -1
 		self.totalreward = 0
 		self.movements = 0
 		self.gamma = 0.99
 		self.alpha = 0.1
 		self.alpha_nn = 0.0001
+		self.gridSize = board_size
 		self.epsilon = 0.1
-		self.numIterations = 1000
+		self.numIterations = 10000
 		self.changeIteration = 2500
 		self.maxSteps = 500
 		self.plotStep = 50
 
 		self.actions = [(-1, 0), (1, 0), (0, 1), (0, -1)]
-		self.gridSize = board_size
 		self.epsilon_scheduled = epsilon_scheduled
 		self.algorithm = algorithm
 		self.exp = exp
@@ -41,9 +45,9 @@ class Board:
 
 		# DQN parameters
 		self.start_learning = 0
-		self.target_update_freq = 1
+		self.target_update_freq = update_freq
 		self.learning_freq = 1
-		self.batch_size = 1
+		self.batch_size = batch_size
 		self.loss_list = []
 
 		# Dyna Q
@@ -53,7 +57,7 @@ class Board:
 		self.nstep = nstep
 
 		# Paths or printing variables
-		self.version = self.setVersion() + '.' + self.algorithm
+		# self.version = self.setVersion() + '.' + self.algorithm
 		self.plotBool = plotBool
 		self.surface_path = os.path.join(
 			"/gifs/TimeDifference/", self.algorithm)
@@ -73,14 +77,15 @@ class Board:
 		# Walls of grid world
 		self.lava = []
 		self.setLava(self.exp)
-		self.terminalState = getEnv(self.exp, self.gridSize)["terminalState"]
+		self.terminalStates = getEnv(self.exp, self.gridSize)["terminalState"]
 		self.initState = self.resetInit()
 
-	def setVersion(self):
-		tnum = "TENSORBOARD_NUMBER"
-		assert (
-			tnum in os.environ), "Set environment variable for tensorboard and heatmaps"
-		return os.environ[tnum]
+	# def setVersion(self):
+	# 	tnum = "TENSORBOARD_NUMBER"
+	# 	assert (
+	# 		tnum in os.environ), "Set environment variable for tensorboard and heatmaps"
+	# 	return os.environ[tnum]
+
 	def changeExperiment(self, it):
 		if not self.changeExp == None:
 			if it == self.changeIteration:
@@ -95,13 +100,11 @@ class Board:
 		self.totalreward = 0
 		self.movements = 0
 		# Initialize initState to terminal state to make sure we enter the while
-		initState = self.terminalState
-		while initState == self.terminalState or initState in self.lava:
-			initState = (random.randint(0, self.gridSize-1),random.randint(0, self.gridSize-1))
+		initState = self.terminalStates[0][:]
+		while initState in self.terminalStates or initState in self.lava:
+			initState[0] = random.randint(0, self.gridSize-1)
+			initState[1] = random.randint(0, self.gridSize-1)
 		return tuple(initState)
-
-	def resetTerminalRandomly(self):
-		self.terminalState = (random.randint(0, self.gridSize-1),random.randint(0, self.gridSize-1))
 
 	def setLava(self, exp):
 		cells = []
@@ -120,7 +123,7 @@ class Board:
 		if list(nextState) in self.lava:
 			reward = self.reward_lava
 
-		if tuple(nextState) == self.terminalState:
+		if list(nextState) in self.terminalStates:
 			reward = 0
 			done = True
 
@@ -153,17 +156,37 @@ class Board:
 
 	def getTerminalState(self):
 		board = np.zeros((self.gridSize, self.gridSize))
-		board[self.terminalState[0]][self.terminalState[1]] = 1
+		for state in self.terminalStates:
+			board[state[0]][state[1]] = 1
 		return board
 
 	def getEnvironment(self, state):
 		agent = self.getAgent(state)
 		lava = self.getLava()
 		terminalStates = self.getTerminalState()
-
-		return np.stack((agent,lava, terminalStates))
+		return np.stack((agent,lava,terminalStates))
+		# return 0.6*agent+0.3*lava+terminalStates
 
 	def printBoard(self, state):
 		board = np.zeros((self.gridSize, self.gridSize))
 		board[state[0]][state[1]] = 1
 		print(board)
+
+	# def plotHeatmap(self, it):
+	# 	if self.plotBool[0]:
+	# 		plot_heatmap(self.count, os.path.join(
+	# 			self.heatmap_path, self.version + '.' + str(it) + '.png'), it)
+
+	# def generateGIF(self, path):
+	# 	if any(self.plotBool):
+	# 		genGIF(path)
+	#
+	# def plotValues(self, it, Q):
+	# 	if self.plotBool[1]:
+	# 		V1 = np.zeros((self.gridSize, self.gridSize))
+	# 		for i, x in enumerate(V1):
+	# 			for t, y in enumerate(x):
+	# 				for a, q in zip(self.policy[(i, t)], Q[(i, t)]):
+	# 					V1[i][t] += a * q
+	# 		plot_value_function(V1, it, path=os.path.join(
+	# 			self.surface_path, "{:03}.png".format(it)))

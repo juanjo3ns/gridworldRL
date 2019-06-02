@@ -1,18 +1,20 @@
 import csv
 import os
 
-path = '/data/src/csvdata/'
 
 
 class CSV:
-	def __init__(self,file,folder):
-		if not os.path.exists(os.path.join(path,folder)):
-			os.mkdir(os.path.join(path,folder))
+	def __init__(self,type, version , file):
+		self.path = '/data/src/csvdata/'
+		if not os.path.exists(os.path.join(self.path,type)):
+			os.mkdir(os.path.join(self.path,type))
+		if not os.path.exists(os.path.join(self.path,type,version)):
+			os.mkdir(os.path.join(self.path,type,version))
 		self.file = file
-		self.csvfile = open(os.path.join(path,folder, self.file + '.csv'), 'w')
+		self.csvfile = open(os.path.join(self.path, type, version, self.file + '.csv'), 'w')
 		self.csvwriter = csv.writer(self.csvfile, delimiter=',')
 
-	def write(self, c1, c2):
-		self.csvwriter.writerow([c1[0],c1[1],c2[0],c2[1]])
+	def write(self, row):
+		self.csvwriter.writerow(row)
 	def close(self):
 		self.csvfile.close()
