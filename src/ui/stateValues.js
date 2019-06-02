@@ -24,7 +24,7 @@ function addStateValues() {
 }
 function newPosition(y){
 
-	return -40 -y*15;
+	return -50 -y*25;
 }
 function changeValues(epoch){
 	file = getURL("vvalues", epoch);

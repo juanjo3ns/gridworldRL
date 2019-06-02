@@ -22,7 +22,8 @@ function moveCamera(x,y,z, time){
 }
 function rotateSteps(time){
 	new TWEEN.Tween(scene.getObjectByName("steps").position)
-	.to(scene.getObjectByName("steps").position.clone().set(0,-70,0), time)
+	.to(scene.getObjectByName("steps").position.clone().set(0,-85,0), time)
+	.delay(1000)
 	.easing(TWEEN.Easing.Quadratic.Out)
 	.start();
 
