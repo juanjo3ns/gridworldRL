@@ -23,6 +23,13 @@ function addStepsBoard() {
 	steps.visible=false;
   scene.add(steps);
 }
+function resetSteps(){
+	for (var i = 0; i < gridSize; i++) {
+		for (var j = 0; j < gridSize; j++) {
+			scene.getObjectByName("steps").getObjectByName((j+i*19).toString()).material.color.setRGB(0,0,0);
+		}
+	}
+}
 
 function setSteps(epoch){
 	file = getURL("steps", epoch);

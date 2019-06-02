@@ -237,6 +237,8 @@ function onDocumentMouseDown( event ) {
 					clearInterval(intervalID);
 					runDefaultEpisode(true);
 					backtoGreen();
+					resetValues();
+					resetSteps();
 					scene.getObjectByName("steps").visible = false;
 				}else{
 					intersects1[0].object.material.color.set('white');

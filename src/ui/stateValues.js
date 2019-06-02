@@ -26,6 +26,13 @@ function newPosition(y){
 
 	return -50 -y*25;
 }
+function resetValues(){
+	for (var i = 0; i < gridSize; i++) {
+		for (var j = 0; j < gridSize; j++) {
+			moveValue(newPosition(0),100,(j+i*19).toString());
+		}
+	}
+}
 function changeValues(epoch){
 	file = getURL("vvalues", epoch);
 	data = getData(file);
