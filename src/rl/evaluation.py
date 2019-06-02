@@ -53,19 +53,21 @@ for i, it in enumerate(iterations):
 	dtype = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
 	Q = Q.type(dtype)
 
-	num_episodes = 50
-	save_episodes = 5
+	num_episodes = 100
 	lost = 0
 	mvs = []
 	rwr = []
+	total_coords=[]
 
 	for i in range(num_episodes):
 		initState = board.resetInitRandomly()
+		total_coords.append([initState[0],initState[1],board.terminalStates[0][0],board.terminalStates[0][1]])
 		done = False
 		while not done:
 			# board.printBoard(initState)
 			action = eval_step(Q,initState)
 			reward, nextState, done = board.takeAction(initState, action)
+			total_coords.append([nextState[0],nextState[1],board.terminalStates[0][0],board.terminalStates[0][1]])
 			initState = nextState
 			board.count[nextState]+=1
 			if board.movements > board.maxSteps:
@@ -84,25 +86,15 @@ for i, it in enumerate(iterations):
 			row1.extend([vvalues(Q,[i,j])])
 		csv_steps.write(row)
 		csv_vvalues.write(row1)
+
 	'''SAVE COORDINATES OF EPISODES'''
 	avg_mvs = sum(mvs)/num_episodes
 	avg_rwr = sum(rwr)/num_episodes
 	message = "ITERATION: {}\nVICTORIES: {}\nDEFEATS: {}\nAVERAGE REWARD: {}\nAVERAGE MOVEMENTS: {}".format(it,(num_episodes-lost), lost, avg_rwr, avg_mvs)
 	print(message)
 	csv_coords.write([it.split('.')[0],(num_episodes-lost)/num_episodes*100,round(avg_rwr,2),avg_mvs])
-
-	for i in range(save_episodes):
-		initState = board.resetInitRandomly()
-		csv_coords.write([initState[0],initState[1],board.terminalStates[0][0],board.terminalStates[0][1]])
-		done = False
-		while not done:
-			action = eval_step(Q,initState)
-			reward, nextState, done = board.takeAction(initState, action)
-			csv_coords.write([nextState[0],nextState[1],board.terminalStates[0][0],board.terminalStates[0][1]])
-			initState = nextState
-			if board.movements > board.maxSteps:
-				break
-
+	for st in total_coords:
+		csv_coords.write(st)
 
 
 	# Close all csv writers

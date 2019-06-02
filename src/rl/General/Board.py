@@ -34,7 +34,7 @@ class Board:
 		self.epsilon = 0.1
 		self.numIterations = 10000
 		self.changeIteration = 2500
-		self.maxSteps = 500
+		self.maxSteps = 70
 		self.plotStep = 50
 
 		self.actions = [(-1, 0), (1, 0), (0, 1), (0, -1)]
