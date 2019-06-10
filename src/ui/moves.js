@@ -28,3 +28,14 @@ function rotateSteps(time){
 	.start();
 
 }
+function rotateAgent(x,y,z,time){
+	y_ = (scene.getObjectByName("agent").rotation.y + y)
+	console.log("current radians ", scene.getObjectByName("agent").rotation.y);
+	console.log("move to ", y_);
+
+	new TWEEN.Tween(scene.getObjectByName("agent").rotation)
+	.to({y:y_}, time)
+	.easing(TWEEN.Easing.Quadratic.Out)
+	.start();
+
+}
