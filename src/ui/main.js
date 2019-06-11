@@ -99,7 +99,7 @@ async function runDefaultEpisode(init = false) {
     updateStats(csvData);
   }
   scene.getObjectByName("text_parent").visible = false;
-	await sleep(2000);
+  await sleep(500);
   intervalID = setInterval(runEvaluations, 300, csvData);
 }
 
@@ -121,7 +121,7 @@ function switchOpacity() {
   }
 }
 
-//Set blue color for all the normal cells
+//Set black color for all the normal cells
 function paintBoard(state) {
   for (var i = 0; i < gridSize; i++) {
     for (var j = 0; j < gridSize; j++) {
@@ -144,7 +144,6 @@ function changeCSV(epoch) {
   csvData = getData(csvfile);
   updateStats(csvData);
   changeValues(epoch);
-  var counter = 1;
   intervalID = setInterval(runEvaluations, 250, csvData);
 
 }

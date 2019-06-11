@@ -54,20 +54,20 @@ function runEvaluations(csvData){
 	checkAgentOrientation(state,laststep);
  	if(laststep[0]==state[0] && laststep[1]==state[1]){
 		if (state[0]==9){
-			moveAgent(trC(state[0]+1), 6.5,trC(state[1]), 100,0);
-			moveAgent(trC(state[0]), 6.5,trC(state[1]), 100, 100);
+			moveAgent(trC(state[0]+1), 5.5,trC(state[1]), 100,0);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]), 100, 100);
 		}else if(state[1]==9){
-			moveAgent(trC(state[0]), 6.5,trC(state[1]+1), 100, 0);
-			moveAgent(trC(state[0]), 6.5,trC(state[1]), 100,100);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]+1), 100, 0);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]), 100,100);
 		}else if(state[0]==0){
-			moveAgent(trC(state[0]-1), 6.5,trC(state[1]), 100,0);
-			moveAgent(trC(state[0]), 6.5,trC(state[1]), 100,100);
+			moveAgent(trC(state[0]-1), 5.5,trC(state[1]), 100,0);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]), 100,100);
 		}else if(state[1]==0){
-			moveAgent(trC(state[0]), 6.5,trC(state[1]-1), 100,0);
-			moveAgent(trC(state[0]), 6.5,trC(state[1]), 100,100);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]-1), 100,0);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]), 100,100);
 		}
 	}else{
-		moveAgent(trC(state[0]), 6.5,trC(state[1]), 300,0);
+		moveAgent(trC(state[0]), 5.5,trC(state[1]), 300,0);
 	}
 	laststep = state;
 	counter += 1;
