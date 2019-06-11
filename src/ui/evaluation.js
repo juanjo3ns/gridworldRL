@@ -24,7 +24,6 @@ function checkAgentOrientation(state, prevstate){
 	} else if(JSON.stringify(state_dif) == JSON.stringify([0,1])){
 		new_orientation = 1;
 	}
-	console.log(new_orientation, agent_orientation);
 	if (new_orientation!=-1){
 		var steps = (agent_orientation-new_orientation);
 
@@ -33,7 +32,6 @@ function checkAgentOrientation(state, prevstate){
 		}else if (steps<-2){
 			steps=1;
 		}
-		console.log(steps,steps*Math.PI/2);
 		rotateAgent(0,steps*Math.PI/2,0,100);
 		agent_orientation = new_orientation;
 	}
@@ -69,7 +67,7 @@ function runEvaluations(csvData){
 			moveAgent(trC(state[0]), 6.5,trC(state[1]), 100,100);
 		}
 	}else{
-		moveAgent(trC(state[0]), 6.5,trC(state[1]), 200,0);
+		moveAgent(trC(state[0]), 6.5,trC(state[1]), 300,0);
 	}
 	laststep = state;
 	counter += 1;

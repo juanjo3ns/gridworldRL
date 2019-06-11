@@ -2,7 +2,7 @@ function moveAgent(x,y,z, time, delay){
 	new TWEEN.Tween(scene.getObjectByName("agent").position)
 	.to(scene.getObjectByName("agent").position.clone().set(x,y,z), time)
 	.delay(delay)
-	.easing(TWEEN.Easing.Quadratic.Out)
+	.easing(TWEEN.Easing.Linear.None)
 	.start();
 
 }
@@ -30,9 +30,6 @@ function rotateSteps(time){
 }
 function rotateAgent(x,y,z,time){
 	y_ = (scene.getObjectByName("agent").rotation.y + y)
-	console.log("current radians ", scene.getObjectByName("agent").rotation.y);
-	console.log("move to ", y_);
-
 	new TWEEN.Tween(scene.getObjectByName("agent").rotation)
 	.to({y:y_}, time)
 	.easing(TWEEN.Easing.Quadratic.Out)
