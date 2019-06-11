@@ -99,7 +99,6 @@ async function runDefaultEpisode(init = false) {
     updateStats(csvData);
   }
   scene.getObjectByName("text_parent").visible = false;
-  await sleep(500);
   intervalID = setInterval(runEvaluations, 300, csvData);
 }
 
@@ -288,7 +287,7 @@ function showAgent() {
       const root = event.detail.loaderRootNode;
       root.scale.set(2.4, 2.4, 2.4);
 			root.name = 'agent';
-			root.position.set(45, 7, 45);
+			root.position.set(45, -50, 200);
 			scene.add(root);
     });
   });
