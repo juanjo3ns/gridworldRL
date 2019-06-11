@@ -18,22 +18,23 @@ function checkAgentOrientation(state, prevstate){
 	if (JSON.stringify(state_dif) == JSON.stringify([1,0])){
 		new_orientation = 0;
 	} else if (JSON.stringify(state_dif) == JSON.stringify([-1,0])){
-		new_orientation = 1;
-	} else if (JSON.stringify(state_dif) == JSON.stringify([0,-1])){
 		new_orientation = 2;
-	} else if(JSON.stringify(state_dif) == JSON.stringify([0,1])){
+	} else if (JSON.stringify(state_dif) == JSON.stringify([0,-1])){
 		new_orientation = 3;
+	} else if(JSON.stringify(state_dif) == JSON.stringify([0,1])){
+		new_orientation = 1;
 	}
 	console.log(new_orientation, agent_orientation);
 	if (new_orientation!=-1){
-		var steps = (new_orientation - agent_orientation) % 4;
+		var steps = (agent_orientation-new_orientation);
+
 		if (steps>2){
-			steps=1;
-		}else if (steps<-2){
 			steps=-1;
+		}else if (steps<-2){
+			steps=1;
 		}
-		console.log(steps,-steps*Math.PI/2);
-		rotateAgent(0,-steps*Math.PI/2,0,100);
+		console.log(steps,steps*Math.PI/2);
+		rotateAgent(0,steps*Math.PI/2,0,100);
 		agent_orientation = new_orientation;
 	}
 
@@ -49,6 +50,7 @@ function runEvaluations(csvData){
 	state = [parseInt(csvData[counter][0]),parseInt(csvData[counter][1])];
 	if (isInit(laststep, state)){
 		scene.getObjectByName("agent").rotation.y = 0;
+		agent_orientation = 1;
 		paintBoard(state);
 	}
 	checkAgentOrientation(state,laststep);
