@@ -7,7 +7,7 @@ function addStateValues() {
       var material = new THREE.MeshPhongMaterial({
 				transparent: true,
 				opacity: 0.5,
-        color: 'blue',
+        color: 'white',
         flatShading: THREE.FlatShading
       });
 

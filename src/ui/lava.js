@@ -11,15 +11,15 @@ function getLava(){
 		steps: 1,
 		depth: 1,
 		bevelEnabled: true,
-		bevelThickness: 3,
-		bevelSize: 2,
-		bevelOffset: -2,
-		bevelSegments: 5
+		bevelThickness: 7,
+		bevelSize: 0,
+		bevelOffset: 0,
+		bevelSegments: 1
 	};
 	var cell = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+	cell.translate( 0, 0, -7 );
 	var material = new THREE.MeshPhongMaterial({
-		color: 'red',
-		flatShading: THREE.FlatShading
-	});
+		color: 'gray'
+		});
 	return [cell, material]
 }

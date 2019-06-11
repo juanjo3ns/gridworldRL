@@ -1,6 +1,6 @@
 var num_files = 30;
 var buttons = [...Array(num_files).keys()].toString().split(",");
-var x=15; y=90; z=-105;
+var x=65; y=90; z=-105;
 
 function addButtons() {
   // Creation of #gridSize cubes and text to select which epoch to load
@@ -8,7 +8,7 @@ function addButtons() {
   for (var j = 0; j < 3; j++) {
     for (var i = 0; i < (num_files / 3); i++) {
       var material = new THREE.MeshBasicMaterial({
-        color: 'green'
+        color: '#44a33c'
       });
       var mesh = new THREE.Mesh(cube, material);
       gparent.add(mesh);
@@ -33,9 +33,9 @@ function addEpochs() {
     var m = new THREE.MeshPhongMaterial({
       color: 'white'
     });
-    var t = new THREE.TextGeometry("SELECT_EPOCH:", {
+    var t = new THREE.TextGeometry("SELECT    EPOCH:", {
       font: font,
-      size: 6,
+      size: 3.5,
       height: 1,
       curveSegments: 2
     });
@@ -46,7 +46,7 @@ function addEpochs() {
     select_mesh.position.z = z;
   });
   var material1 = new THREE.MeshPhongMaterial({
-    color: 'green',
+    color: 'white',
     specular: (20, 40, 80),
     shininess: 30
   });

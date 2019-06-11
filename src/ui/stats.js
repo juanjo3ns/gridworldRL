@@ -1,10 +1,10 @@
-var words = new Array("Epoch-->","Accuracy-->","Average_reward-->","Average_steps-->");
+var words = new Array("Epoch:   ","Accuracy:   ","Average   reward:   ","Average    steps:   ");
 function addStats(csvData) {
 	var fontLoader = new THREE.FontLoader();
 	fontLoader.load('https://cdn.rawgit.com/redwavedesign/ccb20f24e7399f3d741e49fbe23add84/raw/402bcf913c55ad6b12ecfdd20c52e3047ff26ace/bebas_regular.typeface.js', function(font) {
 		for (var i=0; i<words.length; i++){
 			var fontMaterial = new THREE.MeshPhongMaterial({
-				color: 'white'
+				color: 'gray'
 			});
 			if (i==1){
 				var text = words[i].concat(parseFloat(csvData[0][1]).toFixed(2).toString()).concat('%');

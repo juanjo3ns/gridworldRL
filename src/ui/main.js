@@ -115,7 +115,7 @@ function switchOpacity() {
     for (var i = 0; i < gridSize; i++) {
       for (var j = 0; j < gridSize; j++) {
         scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.transparent = true;
-        scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.opacity = 0.3;
+        scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.opacity = 0.95;
       }
     }
   }
@@ -126,15 +126,15 @@ function paintBoard(state) {
   for (var i = 0; i < gridSize; i++) {
     for (var j = 0; j < gridSize; j++) {
       if (lavaArray.indexOf(JSON.stringify([i, j])) != -1) {
-        scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.color = new THREE.Color(0xff0000);
+        scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.color = new THREE.Color('gray');
       } else if (terminalState.indexOf(JSON.stringify([i, j])) != -1) {
-        scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.color = new THREE.Color(0x000000);
+        scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.color = new THREE.Color('white');
       } else {
-        scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.color = new THREE.Color(0x0000ff);
+        scene.getObjectByName("cells").getObjectByName((j + i * 19).toString()).material.color = new THREE.Color('black');
       }
     }
   }
-  scene.getObjectByName("cells").getObjectByName((state[0] * 19 + state[1]).toString()).material.color = new THREE.Color(0xffffff);;
+  scene.getObjectByName("cells").getObjectByName((state[0] * 19 + state[1]).toString()).material.color = new THREE.Color('silver');;
 }
 
 function changeCSV(epoch) {
@@ -177,7 +177,7 @@ function init() {
   var height = window.innerHeight;
 
   renderer.setSize(width, height);
-  renderer.setClearColor(0x140b33, 1);
+  renderer.setClearColor('#151515', 1);
   document.body.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
@@ -188,10 +188,10 @@ function init() {
 
   //LIGHTNING
   light = new THREE.PointLight(0xffffff, 1, 4000);
-  light.position.set(50, 0, 0);
+  light.position.set(100, 100, -150);
   light_two = new THREE.PointLight(0xffffff, 1, 4000);
-  light_two.position.set(-100, 800, 800);
-  lightAmbient = new THREE.AmbientLight(0x404040);
+  light_two.position.set(-100, 100, -50);
+  lightAmbient = new THREE.AmbientLight('white');
   scene.add(light, light_two, lightAmbient);
 
   // OBJECTS
@@ -234,13 +234,13 @@ function showBoard() {
       } else if (terminalState.indexOf(JSON.stringify([i, j])) != -1) {
         var cell = new THREE.BoxGeometry(10, 2, 10);
         var material = new THREE.MeshPhongMaterial({
-          color: 'black',
+          color: 'white',
           flatShading: THREE.FlatShading
         });
       } else {
         var cell = new THREE.BoxGeometry(10, 2, 10);
         var material = new THREE.MeshPhongMaterial({
-          color: 'blue',
+          color: 'black',
           flatShading: THREE.FlatShading
         });
       }
@@ -287,7 +287,7 @@ function showAgent() {
     objLoader.setMaterials(materials);
     objLoader.load('models/bb8/bb-unit.obj', (event) => {
       const root = event.detail.loaderRootNode;
-      root.scale.set(3, 3, 3);
+      root.scale.set(2.4, 2.4, 2.4);
 			root.name = 'agent';
 			root.position.set(45, 7, 45);
 			scene.add(root);
