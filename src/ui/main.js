@@ -287,7 +287,8 @@ function showAgent() {
       const root = event.detail.loaderRootNode;
       root.scale.set(2.4, 2.4, 2.4);
 			root.name = 'agent';
-			root.position.set(45, -50, 200);
+      root.position.set(45, -50, 200);
+      root.rotation.y=0;
 			scene.add(root);
     });
   });
