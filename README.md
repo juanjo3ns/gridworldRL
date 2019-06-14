@@ -1,6 +1,6 @@
 # Demo of maze solving with Reinforcement Learning - [DEMO](https://juanjo3ns.github.io/gridworldRL/)
 ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fjuanjo3ns%2FgridworldRL)
-![Demo](https://github.com/juanjo3ns/gridworldRL/blob/master/demogrid.png)
+![Demo](https://user-images.githubusercontent.com/16901615/59520669-bef86a80-8eca-11e9-8bb3-6768c375a233.png)
 
 ##  1. Motivation
 Two months ago [@enric1994](https://github.com/enric1994) and myself [@juanjo3ns](https://github.com/juanjo3ns) started learning Reinforcement Learning. To do so, we picked the simplest and most common environment to begin in this topic, the grid world. This simple game is recommended and heavily used by the Sutton and Barto book and the lectures from DeepMind at UCL. 
