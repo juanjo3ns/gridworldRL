@@ -16,6 +16,6 @@ To solve this problem we have used the Double DQN algorithm, where you bootstrap
 
 
 ##  3. 3D Modeling
-Unlike in our [Star Wars](https://juanjo3ns.github.io/starwars-RL/) demo, here we are representing the actual problem. An agent that has to avoid some cells in order to get the terminal state with the highest accumulated reward. Apart from that, we've also represented a couple more things:
+Unlike in our [Star Wars](https://juanjo3ns.github.io/starwars-RL/) demo, here we are representing the actual problem. An agent that has to avoid some cells in order to get the terminal state with the highest accumulated reward. Besides that, we've also represented a couple more things:
 * State-values: The spheres below the grid represent the expected return of the agent in each state, the return meaning the cumulative rewards until final state. 
 * Number steps: The grid below the spheres represent the number of times the agent has passed through each cell during evaluation. It's encoded as yellow -> less number of times and red -> more number of times.
