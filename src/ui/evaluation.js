@@ -14,7 +14,7 @@ function isInit(laststep,state){
 function checkAgentOrientation(state, prevstate){
 	var new_orientation = -1;
 	var state_dif = [state[0]-prevstate[0], state[1]-prevstate[1]];
-	console.log(state_dif, state, prevstate);
+	// console.log(state_dif, state, prevstate);
 	if (JSON.stringify(state_dif) == JSON.stringify([1,0])){
 		new_orientation = 0;
 	} else if (JSON.stringify(state_dif) == JSON.stringify([-1,0])){
@@ -32,7 +32,7 @@ function checkAgentOrientation(state, prevstate){
 		}else if (steps<-2){
 			steps=1;
 		}
-		rotateAgent(0,steps*Math.PI/2,0,100);
+		rotateAgent(0,steps*Math.PI/2,0,50);
 		agent_orientation = new_orientation;
 	}
 
@@ -54,20 +54,20 @@ function runEvaluations(csvData){
 	checkAgentOrientation(state,laststep);
  	if(laststep[0]==state[0] && laststep[1]==state[1]){
 		if (state[0]==9){
-			moveAgent(trC(state[0]+1), 5.5,trC(state[1]), 100,0);
-			moveAgent(trC(state[0]), 5.5,trC(state[1]), 100, 100);
+			moveAgent(trC(state[0]+1), 5.5,trC(state[1]), 50,0);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]), 50, 50);
 		}else if(state[1]==9){
-			moveAgent(trC(state[0]), 5.5,trC(state[1]+1), 100, 0);
-			moveAgent(trC(state[0]), 5.5,trC(state[1]), 100,100);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]+1), 50, 0);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]), 50,50);
 		}else if(state[0]==0){
-			moveAgent(trC(state[0]-1), 5.5,trC(state[1]), 100,0);
-			moveAgent(trC(state[0]), 5.5,trC(state[1]), 100,100);
+			moveAgent(trC(state[0]-1), 5.5,trC(state[1]), 50,0);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]), 50,50);
 		}else if(state[1]==0){
-			moveAgent(trC(state[0]), 5.5,trC(state[1]-1), 100,0);
-			moveAgent(trC(state[0]), 5.5,trC(state[1]), 100,100);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]-1), 50,0);
+			moveAgent(trC(state[0]), 5.5,trC(state[1]), 50,50);
 		}
 	}else{
-		moveAgent(trC(state[0]), 5.5,trC(state[1]), 300,0);
+		moveAgent(trC(state[0]), 5.5,trC(state[1]), 200,0);
 	}
 	laststep = state;
 	counter += 1;
