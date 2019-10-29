@@ -99,7 +99,7 @@ async function runDefaultEpisode(init = false) {
     updateStats(csvData);
   }
   scene.getObjectByName("text_parent").visible = false;
-  intervalID = setInterval(runEvaluations, 300, csvData);
+  intervalID = setInterval(runEvaluations, 200, csvData);
 }
 
 function switchOpacity() {
@@ -143,7 +143,7 @@ function changeCSV(epoch) {
   csvData = getData(csvfile);
   updateStats(csvData);
   changeValues(epoch);
-  intervalID = setInterval(runEvaluations, 250, csvData);
+  intervalID = setInterval(runEvaluations, 200, csvData);
 
 }
 
